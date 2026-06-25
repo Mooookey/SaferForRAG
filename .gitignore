@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#------------------------#
+
+# 排除日志文件
+logs/
+*.log
+*.log.*
+!logs/.gitkeep   # 保留占位文件
