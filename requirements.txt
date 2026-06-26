@@ -1,1 +1,2 @@
-pydantic
+presidio-analyzer 
+presidio-anonymizer
