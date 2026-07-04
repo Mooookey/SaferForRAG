@@ -1,2 +1,7 @@
 presidio-analyzer 
 presidio-anonymizer
+llm-guard
+click
+pydantic
+fastapi[standard]
+uvicorn
