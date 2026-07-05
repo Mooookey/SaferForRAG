@@ -1,7 +1,7 @@
 nlp_engine_name: spacy
 models:
   - lang_code: zh
-    model_name: zh_core_web_sm
+    model_name: zh_core_web_lg
   - lang_code: en
     model_name: en_core_web_lg
 ner_model_configuration:

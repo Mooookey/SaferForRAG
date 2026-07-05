@@ -3,5 +3,5 @@ presidio-anonymizer
 llm-guard
 click
 pydantic
-fastapi[standard]
+fastapi
 uvicorn

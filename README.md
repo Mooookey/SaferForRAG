@@ -9,7 +9,8 @@ pip install llm-guard[onnxruntime]
 pip install llm-guard[onnxruntime-gpu]
 
 # 下载presidio的底层模型
-python -m spacy download zh_core_web_sm   
+python -m spacy download zh_core_web_sm 
+python -m spacy download zh_core_web_lg  
 '''
 其中，
 - llm-guard使用普通 PyTorch/transformers 路线，首次加载和推理都会比较慢
