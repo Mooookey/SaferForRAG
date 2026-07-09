@@ -1,25 +1,17 @@
 from typing import Dict
 
-from presidio_analyzer import AnalyzerEngine, Pattern, PatternRecognizer
+from presidio_analyzer import AnalyzerEngine
 from presidio_anonymizer import AnonymizerEngine
-from presidio_anonymizer.entities import OperatorConfig
 from presidio_analyzer.nlp_engine import NlpEngineProvider
-import json
-from pprint import pprint
 
-from llm_guard import scan_output, scan_prompt
-from llm_guard.input_scanners import PromptInjection, TokenLimit, Toxicity, BanTopics, Regex, BanSubstrings
-from llm_guard.output_scanners import  NoRefusal, Bias, Toxicity, BanTopics, Regex, BanSubstrings
-from llm_guard.vault import Vault
-
-from presidio_anonymizer.entities import InvalidParamError
-from presidio_anonymizer.operators import Operator, OperatorType
-from presidio_anonymizer.services.validators import validate_parameter
-
+from app.policy.Check_Policy import CheckPolicy_Factory
+from app.policy.Detection_Policy import DetectionPolicy_Factory
+from app.policy.Transformation_Policy import TransformationPolicy_Factory
 from app.recognizer.China_Id_card_recognizer import ChinaIdCardRecognizer
 
+
 class ServiceContainer:
-    LANGUAGES_CONFIG_FILE:str= "./app/config/lm-config.yaml"
+    LANGUAGES_CONFIG_FILE: str = "./app/config/lm-config.yaml"
     recognizer_registered: Dict[str, bool] = {
         "CN_id_card_recognizer_registered": False
     }
@@ -29,7 +21,7 @@ class ServiceContainer:
         nlp_engine = provider.create_engine()
 
         self.analyzer = AnalyzerEngine(
-            nlp_engine=nlp_engine, 
+            nlp_engine=nlp_engine,
             supported_languages=["zh", "en"],
             log_decision_process=False,
         )
@@ -37,26 +29,11 @@ class ServiceContainer:
 
         self.anonymizer = AnonymizerEngine()
 
-        self.input_scanners = [
-            Toxicity(), 
-            TokenLimit(), 
-            PromptInjection(),
-            BanTopics(topics=["violence or violent crime 暴力或暴力犯罪",
-                              "religion and religious extremism 宗教或宗教极端主义",
-                              "political persuasion or political opinion 政治劝说或政治观点"
-                              ])
-                        ]
-        self.output_scanners = [
-            Bias(),
-            Toxicity(), 
-            NoRefusal(),
-            BanTopics(topics=["violence or violent crime 暴力或暴力犯罪",
-                              "religion and religious extremism 宗教或宗教极端主义",
-                              "political persuasion or political opinion 政治劝说或政治观点"
-                              ])
-                              ]
-        
-    # 用来批量注册自定义识别器，比如中国身份证号
+        self.tranformation_policy_factory = TransformationPolicy_Factory()
+        self.detection_policy_factory = DetectionPolicy_Factory()
+        self.check_input_policy_factory = CheckPolicy_Factory(mode="input")
+        self.check_output_policy_factory = CheckPolicy_Factory(mode="output")
+
     def _register_recognizer(self) -> None:
         if ServiceContainer.recognizer_registered["CN_id_card_recognizer_registered"]:
             return
@@ -68,6 +45,4 @@ class ServiceContainer:
         ServiceContainer.recognizer_registered["CN_id_card_recognizer_registered"] = True
 
 
-service_container=ServiceContainer()
-
-
+service_container = ServiceContainer()

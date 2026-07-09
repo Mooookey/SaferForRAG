@@ -18,7 +18,7 @@ analyzer = AnalyzerEngine(
 )
 
 # 使用中文大模型，无法识别英文实体，比如名字换成John
-text="我的电话号码是+86-13957345030，名字是李明"
+text="我的电话号码是+86-13957345030，名字是李明，住在上海市"
 
 analyzer_results = analyzer.analyze(text=text, 
                                     language="zh")
@@ -31,9 +31,9 @@ anonymized_results = anonymizer.anonymize(
     analyzer_results=analyzer_results,
     operators={
         "DEFAULT": OperatorConfig(
-            "replace", 
+            "encrypt", 
             {
-                "new_value": "<ANONYMIZED>"
+                "key":1
             }
         ),
         "PHONE_NUMBER": OperatorConfig(
