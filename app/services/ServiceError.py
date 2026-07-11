@@ -1,2 +1,3 @@
 class ServiceError(Exception):
-    pass
+    code:str
+    message:str
