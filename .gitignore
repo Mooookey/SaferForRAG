@@ -227,3 +227,4 @@ logs/
 
 .agents
 .vscode
+node_modules

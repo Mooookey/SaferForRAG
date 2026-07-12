@@ -1,0 +1,7 @@
+[project]
+name = "security-processer"
+version = "0.1.0"
+author = "Moookyie"
+repository = "https://github.com/Mooookey/SaferForRAG"
+python = ">=3.10,<3.11"
+dependencies_file = "requirements.txt"

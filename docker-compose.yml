@@ -1,0 +1,11 @@
+services:
+  security-processer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security-processer
+    ports:
+      - "8001:8000"
+    environment:
+      PYTHONUNBUFFERED: "1"
+    restart: unless-stopped
