@@ -3,7 +3,7 @@
 ## 必要链接
 - https://presidio.dataprivacystack.org/api/
 - https://github.com/protectai/llm-guard
-- D:\Miniconda\Envs\SaferForRAG
+- 解释器：D:\Miniconda\Envs\SaferForRAG
 - context7 MCP Server已经通过MCP Router启动，如果对任何API不清楚，请及时向context7发起请求
 ## 背景
 我目前正在依托presidio+llm guard制作一个简单的脱敏模块，无日志，无健全，无高安全性要求，采用明文传输。

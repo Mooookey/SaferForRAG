@@ -1,5 +1,7 @@
 from typing import Dict, List
 
+from pydantic import BaseModel, ConfigDict
+
 from llm_guard.input_scanners import (
     BanSubstrings as InputBanSubstrings,
     BanTopics as InputBanTopics,
@@ -18,18 +20,13 @@ from llm_guard.output_scanners import (
 )
 
 
-class CheckPolicy:
-    def __init__(
-        self,
-        policy_name: str,
-        scanners: list,
-        ban_strings: list[str] | None = None,
-        ban_regexs: list[str] | None = None,
-    ):
-        self.policy_name = policy_name
-        self.scanners = scanners
-        self.ban_strings = ban_strings or []
-        self.ban_regexs = ban_regexs or []
+class CheckPolicy(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    policy_name: str
+    scanners: list = []
+    ban_strings: list[str] = []
+    ban_regexs: list[str] = []
 
 
 class CheckPolicy_Factory:

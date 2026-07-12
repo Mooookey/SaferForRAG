@@ -1,6 +1,7 @@
 import os
 from typing import Dict, List
 
+from pydantic import BaseModel, ConfigDict
 from presidio_anonymizer import EngineResult, OperatorConfig
 
 from app.policy.Transformation_Operator import (
@@ -19,18 +20,19 @@ TransformationOperator = (
     | Mask_Operator
 )
 
-# 理论上self.operators应该和presidio-anonymizer.anonymize的operator参数类型Dict[str,OperatorConfig]一致
-# 但考虑到TransformationPolicy混合了llmguard.output_scanner的Anonymize，所以用List[TransformationOperator]
-class TransformationPolicy:
-    def __init__(self, policy_name: str, operators: List[TransformationOperator]):
-        self.policy_name = policy_name
 
-        # self.operators是一个混合类型
-        self.operators = operators
-        self.presidio_operator: Dict[str, OperatorConfig] = {}
-        self.llmguard_operator: List[Placeholder_Operator] = []
+class TransformationPolicy(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-        for operator in operators:
+    policy_name: str
+    operators: List[TransformationOperator]
+    presidio_operator: Dict[str, OperatorConfig] = {}
+    llmguard_operator: List[Placeholder_Operator] = []
+
+    def model_post_init(self, __context) -> None:
+        self.presidio_operator = {}
+        self.llmguard_operator = []
+        for operator in self.operators:
             if type(operator) == Placeholder_Operator:
                 self.llmguard_operator.append(operator)
             else:
@@ -62,32 +64,37 @@ class TransformationPolicy_Factory:
 
         self._register_policy(
             TransformationPolicy(
-                "irreversible",
-                [Irreversible_Operator("DEFAULT")],
+                policy_name="irreversible",
+                operators=[Irreversible_Operator("DEFAULT")],
             )
         )
         self._register_policy(
             TransformationPolicy(
-                "masked",
-                [Mask_Operator("DEFAULT")],
+                policy_name="masked",
+                operators=[Mask_Operator("DEFAULT")],
             )
         )
         self._register_policy(
             TransformationPolicy(
-                "hash",
-                [Hash_Operator("DEFAULT", salt_enabled=False)],
+                policy_name="hash",
+                operators=[Hash_Operator("DEFAULT", salt_enabled=False)],
             )
         )
         self._register_policy(
             TransformationPolicy(
-                "placeholder",
-                [Placeholder_Operator("DEFAULT")],
+                policy_name="placeholder",
+                operators=[Placeholder_Operator("DEFAULT")],
             )
         )
         self._register_policy(
             TransformationPolicy(
-                "encrypted",
-                [Encrypt_Operator("DEFAULT", os.getenv("ENCRYPTION_KEY", "${ENCRYPTION_KEY}"))],
+                policy_name="encrypted",
+                operators=[
+                    Encrypt_Operator(
+                        "DEFAULT",
+                        os.getenv("ENCRYPTION_KEY", "${ENCRYPTION_KEY}"),
+                    )
+                ],
             )
         )
 
@@ -101,5 +108,5 @@ class TransformationPolicy_Factory:
     ) -> TransformationPolicy:
         entities: list[str] = [operator.entity for operator in operators]
         if len(entities) != len(set(entities)):
-            raise ValueError("同一实体只能采用唯一的脱敏策略")
-        return TransformationPolicy(policy_name, operators)
+            raise ValueError("Duplicate transformation operator entity")
+        return TransformationPolicy(policy_name=policy_name, operators=operators)

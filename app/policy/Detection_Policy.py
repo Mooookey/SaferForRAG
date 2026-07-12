@@ -1,16 +1,13 @@
 from typing import Dict
 
+from pydantic import BaseModel
 
-class DetectionPolicy:
-    def __init__(self,
-            policy_name:str,
-            return_decision_process:bool=False,
-            entities: list[str]|None=None,
-            allow_list: list[str]|None=None,):
-        self.policy_name=policy_name
-        self.return_decision_process=return_decision_process
-        self.entities=entities
-        self.allow_list=allow_list
+
+class DetectionPolicy(BaseModel):
+    policy_name: str
+    return_decision_process: bool = False
+    entities: list[str] | None = None
+    allow_list: list[str] | None = None
 
 
 class DetectionPolicy_Factory:

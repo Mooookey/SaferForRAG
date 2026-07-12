@@ -43,6 +43,3 @@ class ServiceContainer:
                 ChinaIdCardRecognizer(supported_language=language)
             )
         ServiceContainer.recognizer_registered["CN_id_card_recognizer_registered"] = True
-
-
-service_container = ServiceContainer()
