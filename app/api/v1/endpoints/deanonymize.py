@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from app.lifecycle import get_service_container
 from app.models import DeanonymizeRequest, DeanonymizeResponse
 from app.services.container import ServiceContainer
-from app.services.main_service import Santilizer
+from app.services.Sanitizer import Sanitizer
 
 from .utils import sha_256, to_http_error
 
@@ -17,7 +17,7 @@ async def deanonymize(
     service_container: ServiceContainer = Depends(get_service_container),
 ) -> DeanonymizeResponse:
     try:
-        text = Santilizer.deanonymize(
+        text = Sanitizer.deanonymize(
             text=request.text,
             engine_result=request.engine_result.to_presidio(),
             service_container=service_container,

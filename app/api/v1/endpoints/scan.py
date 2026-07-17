@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from app.lifecycle import get_service_container
 from app.models import RecognizerResultModel, ScanRequest, ScanResponse
 from app.services.container import ServiceContainer
-from app.services.main_service import Santilizer
+from app.services.Sanitizer import Sanitizer
 
 from .utils import sha_256, to_http_error
 
@@ -17,7 +17,7 @@ async def scan(
     service_container: ServiceContainer = Depends(get_service_container),
 ) -> ScanResponse:
     try:
-        results = Santilizer.scan(
+        results = Sanitizer.scan(
             text=request.text,
             service_container=service_container,
             profile=request.profile,

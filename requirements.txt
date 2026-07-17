@@ -100,5 +100,5 @@ wrapt==2.2.2
 zh_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/zh_core_web_lg-3.8.0/zh_core_web_lg-3.8.0-py3-none-any.whl#sha256=eb39f5deb382752d3faef4052fb61570b7f45441076082b2a1fdbe50a8848e7c
 zh_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/zh_core_web_sm-3.8.0/zh_core_web_sm-3.8.0-py3-none-any.whl#sha256=7de3bd267176b9b2a8defb6997c1cd296da16c57b5e712f72ea44a51755421c8
 
-paddlepaddle
-paddlenlp
+paddlepaddle==2.6.2
+paddlenlp==2.6.1

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from app.lifecycle import get_service_container
 from app.models import CheckOutputRequest, CheckResponse
 from app.services.container import ServiceContainer
-from app.services.main_service import Guardian
+from app.services.Guardian import Guardian
 
 from .utils import sha_256, to_http_error
 

@@ -1,8 +1,9 @@
 ## 要求
 每次执行任务前必须阅读本AGENTS.md，确保任务顺利进行
 ## 必要链接
-- https://presidio.dataprivacystack.org/api/
-- https://github.com/protectai/llm-guard
+- Presidio https://presidio.dataprivacystack.org/api/
+- LLM Guard https://github.com/protectai/llm-guard
+- Paddle NLP https://paddlenlp.readthedocs.io/zh/latest/llm/application/information_extraction/README.html
 - 解释器：D:\Miniconda\Envs\SaferForRAG
 - context7 MCP Server已经通过MCP Router启动，如果对任何API不清楚，请及时向context7发起请求
 ## 背景

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from app.lifecycle import get_service_container
 from app.models import AnonymizeRequest, AnonymizeResponse, EngineResultModel
 from app.services.container import ServiceContainer
-from app.services.main_service import Santilizer
+from app.services.Sanitizer import Sanitizer
 
 from .utils import sha_256, to_http_error
 
@@ -21,7 +21,7 @@ async def anonymize(
         if request.analyzer_results is not None:
             analyzer_results = [result.to_presidio() for result in request.analyzer_results]
 
-        engine_result = Santilizer.anonymize(
+        engine_result = Sanitizer.anonymize(
             text=request.text,
             service_container=service_container,
             transformation_profile=request.transformation_profile,

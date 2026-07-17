@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING, List
 
-from llm_guard import scan_output, scan_prompt
 from presidio_analyzer import RecognizerResult
 from presidio_anonymizer import DeanonymizeEngine, EngineResult, OperatorConfig
 from presidio_anonymizer.entities import OperatorResult
 
-from app.policy.Check_Policy import CheckPolicy
 from app.policy.Detection_Policy import DetectionPolicy
 from app.policy.Transformation_Policy import TransformationPolicy
 
@@ -13,7 +11,7 @@ if TYPE_CHECKING:
     from app.services.container import ServiceContainer
 
 
-class Santilizer:
+class Sanitizer:
     @staticmethod
     def _merge_overlapping_results(
         analyzer_results: list[RecognizerResult],
@@ -72,7 +70,7 @@ class Santilizer:
             allow_list=policy.allow_list,
         )
 
-        return Santilizer._merge_overlapping_results(
+        return Sanitizer._merge_overlapping_results(
             analyzer_results_zh + analyzer_results_en
         )
 
@@ -121,7 +119,7 @@ class Santilizer:
             ]
 
         if analyzer_results is None:
-            analyzer_results = Santilizer.scan(
+            analyzer_results = Sanitizer.scan(
                 text=text,
                 service_container=service_container,
                 policy=detection_policy,
@@ -135,7 +133,7 @@ class Santilizer:
             result_text += text[cursor:analyzer_result.start]
             source_text: str = text[analyzer_result.start:analyzer_result.end]
 
-            placeholder_operator = Santilizer._get_placeholder_operator(
+            placeholder_operator = Sanitizer._get_placeholder_operator(
                 transformation_policy,
                 analyzer_result.entity_type,
             )
@@ -155,7 +153,7 @@ class Santilizer:
                 replacement_text: str = single_result.text
                 operator_name: str = "placeholder"
             else:
-                operator_config: OperatorConfig = Santilizer._get_presidio_operator_config(
+                operator_config: OperatorConfig = Sanitizer._get_presidio_operator_config(
                     transformation_policy,
                     analyzer_result.entity_type,
                 )
@@ -232,38 +230,3 @@ class Santilizer:
             )
 
         return text
-
-
-class Guardian:
-    @staticmethod
-    def check_input(
-        text: str,
-        service_container: "ServiceContainer",
-        profile: str | None = None,
-        policy: CheckPolicy | None = None,
-    ):
-        if (policy is None) and (profile is None):
-            raise ValueError("check policy or check profile is required")
-        if policy is None:
-            if profile not in service_container.check_input_policy_factory.registry:
-                raise ValueError("unknown built-in input check profile")
-            policy = service_container.check_input_policy_factory.registry[profile]
-
-        return scan_prompt(policy.scanners, text)
-
-    @staticmethod
-    def check_output(
-        prompt: str,
-        text: str,
-        service_container: "ServiceContainer",
-        profile: str | None = None,
-        policy: CheckPolicy | None = None,
-    ):
-        if (policy is None) and (profile is None):
-            raise ValueError("check policy or check profile is required")
-        if policy is None:
-            if profile not in service_container.check_output_policy_factory.registry:
-                raise ValueError("unknown built-in output check profile")
-            policy = service_container.check_output_policy_factory.registry[profile]
-
-        return scan_output(policy.scanners, prompt, text)

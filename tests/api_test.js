@@ -53,10 +53,10 @@ async function main() {
 
   console.log("测试API: check_output");
   const check_output = await client.post("/check_input", {
-    text: input_text,
+    text: output_text,
     profile: "default",
   });
-  console.log("check_input:", JSON.stringify(check_output.data, null, 2));
+  console.log("checkoutnput:", JSON.stringify(check_output.data, null, 2));
   console.log("--------------------------\n");
 }
 
