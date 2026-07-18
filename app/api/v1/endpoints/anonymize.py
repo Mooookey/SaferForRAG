@@ -21,7 +21,7 @@ async def anonymize(
         if request.analyzer_results is not None:
             analyzer_results = [result.to_presidio() for result in request.analyzer_results]
 
-        engine_result = Sanitizer.anonymize(
+        engine_result = await Sanitizer.anonymize(
             text=request.text,
             service_container=service_container,
             transformation_profile=request.transformation_profile,

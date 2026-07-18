@@ -2,11 +2,13 @@ from presidio_analyzer import RecognizerResult
 
 from app.policy.detection.plan import DetectionCandidate, PaddleCall
 
-
 def convert_presidio_results(
     results: list[RecognizerResult],
     language: str,
 ) -> list[DetectionCandidate]:
+    
+    PRESIDIO_MODEL_BY_LANG = {"zh": "zh_core_web_lg", "en": "en_core_web_lg"}
+    model = PRESIDIO_MODEL_BY_LANG[language]
     return [
         DetectionCandidate(
             entity_type=result.entity_type,
@@ -14,13 +16,15 @@ def convert_presidio_results(
             end=result.end,
             score=result.score,
             source="presidio",
+            model=model,                       # ← 新增：语言映射成模型名
+            raw_label=result.entity_type,      # ← 可选：与 paddle 对称
             metadata={
-                "language": language,
                 "presidio_metadata": result.recognition_metadata,
             },
         )
         for result in results
     ]
+
 
 def convert_paddle_results(
     raw_results: list[dict],

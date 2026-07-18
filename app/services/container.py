@@ -5,9 +5,10 @@ from presidio_anonymizer import AnonymizerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 
 from app.policy.Check_Policy import CheckPolicy_Factory
-from app.policy.Detection_Policy import DetectionPolicy_Factory
 from app.policy.Transformation_Policy import TransformationPolicy_Factory
 from app.recognizer.China_Id_card_recognizer import ChinaIdCardRecognizer
+from app.policy.detection.compiler import DetectionPolicy_Factory
+from app.policy.detection.paddle_adapter import PaddlePipelineFactory
 
 
 class ServiceContainer:
@@ -30,6 +31,7 @@ class ServiceContainer:
         self.anonymizer = AnonymizerEngine()
 
         self.tranformation_policy_factory = TransformationPolicy_Factory()
+        self.paddle_pipeline_factory = PaddlePipelineFactory()
         self.detection_policy_factory = DetectionPolicy_Factory()
         self.check_input_policy_factory = CheckPolicy_Factory(mode="input")
         self.check_output_policy_factory = CheckPolicy_Factory(mode="output")

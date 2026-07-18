@@ -17,7 +17,7 @@ async def scan(
     service_container: ServiceContainer = Depends(get_service_container),
 ) -> ScanResponse:
     try:
-        results = Sanitizer.scan(
+        results = await Sanitizer.scan(
             text=request.text,
             service_container=service_container,
             profile=request.profile,

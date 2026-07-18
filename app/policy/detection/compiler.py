@@ -66,14 +66,17 @@ class DetectionPolicy_Factory:
             is not None
         )
 
-        presidio_call = (
+        # presidio 对 zh、en 各发一次，实体集相同、语言不同
+        presidio_calls: tuple[PresidioCall | None, PresidioCall | None] = tuple(
             PresidioCall(
                 entities=presidio_entities,
+                language=language,
                 allow_list=policy.allow_list,
                 return_decision_process=policy.return_decision_process,
             )
             if presidio_entities
             else None
+            for language in ("zh", "en")
         )
 
         # 三次抽取各自的 schema，以及从 schema 标签反查 canonical entity 的映射
@@ -116,7 +119,13 @@ class DetectionPolicy_Factory:
             ),
         )
 
+        entity_priorities = {
+            entity_type: definition.priority
+            for entity_type, definition in definitions.items()
+        }
+
         return DetectionPlan(
-            presidio_call=presidio_call,
+            presidio_calls=presidio_calls,
             paddle_calls=paddle_calls,
+            entity_priorities=entity_priorities,
         )
