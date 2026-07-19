@@ -236,11 +236,19 @@ class Sanitizer:
         service_container: "ServiceContainer",
         transformation_profile: str | None = None,
         transformation_policy: TransformationPolicy | None = None,
+        detection_profile: str | None = None,
         detection_policy: DetectionPolicy | None = None,
         analyzer_results: List[RecognizerResult] | None = None,
     ) -> EngineResult:
-        if (analyzer_results is None) and (detection_policy is None):
-            raise ValueError("detection_policy is required when analyzer_results is None")
+        if (
+            analyzer_results is None
+            and detection_profile is None
+            and detection_policy is None
+        ):
+            raise ValueError(
+                "detection_policy or detection_profile is required "
+                "when analyzer_results is None"
+            )
         if (transformation_policy is None) and (transformation_profile is None):
             raise ValueError("transformation_policy or transformation_profile is required")
         if transformation_policy is None:
@@ -254,6 +262,7 @@ class Sanitizer:
             analyzer_results = await Sanitizer.scan(
                 text=text,
                 service_container=service_container,
+                profile=detection_profile,
                 policy=detection_policy,
             )
 

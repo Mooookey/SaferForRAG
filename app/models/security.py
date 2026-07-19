@@ -6,7 +6,7 @@ from presidio_anonymizer import EngineResult
 from presidio_anonymizer.entities import OperatorResult
 
 from app.policy.Check_Policy import CheckPolicy
-from app.policy.Detection_Policy import DetectionPolicy
+from app.policy.detection.policy import DetectionPolicy
 
 
 class ErrorResponse(BaseModel):
@@ -112,6 +112,7 @@ class AnonymizeRequest(BaseModel):
     text: str
     transformation_profile: str | None = None
     transformation_policy: Any | None = None
+    detection_profile: str | None = None
     detection_policy: DetectionPolicy | None = None
     analyzer_results: list[RecognizerResultModel] | None = None
 

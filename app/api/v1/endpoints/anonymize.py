@@ -26,6 +26,7 @@ async def anonymize(
             service_container=service_container,
             transformation_profile=request.transformation_profile,
             transformation_policy=request.transformation_policy,
+            detection_profile=request.detection_profile,
             detection_policy=request.detection_policy,
             analyzer_results=analyzer_results,
         )
