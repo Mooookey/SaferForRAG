@@ -1,0 +1,20 @@
+[Unit]
+Description=Security Processer
+After=network.target
+
+[Service]
+Type=simple
+User=<your_username>
+Group=<your_group>
+WorkingDirectory=/home/<your_username>/<project_dir>
+Environment="PATH=/home/<your_username>/<project_dir>/venv/bin"
+Environment="ENV=production"
+ExecStart=/home/<your_username>/<project_dir>/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/var/log/fastapi/access.log
+StandardError=append:/var/log/fastapi/error.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,7 +1,7 @@
 [project]
 name = "security-processer"
 version = "0.1.0"
-description = "A simple Presidio and llm-guard based sanitization service."
+description = "A simple Presidio, llm-guard and PaddleNLP based sanitization service."
 requires-python = ">=3.10,<3.11"
 authors = [
   { name = "Moookyie" }
